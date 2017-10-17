@@ -55,8 +55,7 @@ public class StoryAdapter extends ArrayAdapter{
         tvAuthor.setText(storyModels.get(position).getAuthor());
 
         //set data
-        tvTitle.setText(storyModels.get(position).getTitle());
-        tvAuthor.setText(storyModels.get(position).getAuthor());
+
 
         //tách chuỗi ra thành 2 phần (ngăn cách bởi dấu ","; phần sau là phần base64 mà ta cần dùng để decode ra ảnh
         String[] base64 = storyModels.get(position).getImage().split(",");

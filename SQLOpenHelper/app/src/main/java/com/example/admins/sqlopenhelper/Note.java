@@ -1,13 +1,20 @@
 package com.example.admins.sqlopenhelper;
 
+import java.io.Serializable;
+
 /**
  * Created by Admins on 10/9/2017.
  */
 
-public class Note {
+public class Note implements Serializable {
     private String title;
     private String description;
     private int id;
+
+    public Note(String title, String des) {
+        this.title=title;
+        this.description=des;
+    }
 
     public int getId() {
         return id;

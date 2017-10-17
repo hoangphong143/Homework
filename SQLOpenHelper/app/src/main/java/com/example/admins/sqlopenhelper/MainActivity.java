@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -13,8 +14,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ListView lvNote;
     private FloatingActionButton fbNote;
-    private List<Note> noteList = new ArrayList<>();
-    DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+    public static String KEY="KEY";
+    private List<Note>noteList= new ArrayList<>();
+
 
 
     @Override
@@ -29,10 +31,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        noteList = dataBaseHelper.getListNote();
+        noteList= DataBaseHelper.getInstance(MainActivity.this).getListNote();
 
-        Adapter adapter = new Adapter(this, R.layout.list_items, noteList);
+        Adapter adapter = new Adapter(this, R.layout.list_items, noteList );
         lvNote.setAdapter(adapter);
+        lvNote.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent=new Intent(MainActivity.this, NoteActivities.class);
+                intent.putExtra(KEY, noteList.get(position));
+                startActivity(intent);
+            }
+        });
 
     }
 

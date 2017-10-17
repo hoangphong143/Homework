@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -28,9 +29,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             ", " + KEY_TITLE_NOTE + " TEXT NOT NULL" +
             "," + KEY_DESCRIPTION_NOTE + " TEXT NOT NULL" +
             ")";
+    private static final String TAG = DataBaseHelper.class.toString();
 
     private SQLiteDatabase db;
-
+    public static DataBaseHelper dataBaseHelper;
+    public static DataBaseHelper getInstance(Context context) {
+        if (dataBaseHelper == null) {
+            dataBaseHelper = new DataBaseHelper(context);
+        }
+        return dataBaseHelper;
+    }
     public DataBaseHelper(Context context) {
         super(context, Database_Name, null, DATA_VERSION);
     }
@@ -49,6 +57,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+    public void deleteNote(Note note){
+        db=getWritableDatabase();
+        db.delete(TABLE_NOTE,KEY_TITLE_NOTE +"=?",new String[]{note.getTitle()});
+        db.close();
+
+    }
+    public void updateNote(Note note){
+        db=getWritableDatabase();
+        ContentValues contentValues= new ContentValues();
+        contentValues.put(KEY_DESCRIPTION_NOTE, note.getDescription());
+        contentValues.put(KEY_TITLE_NOTE, note.getTitle());
+        db.update(TABLE_NOTE,contentValues,"id=" + note.getId() + "", null);
+        db.close();
+
+    }
 
     public void open() {
         try {
@@ -65,9 +88,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 db.close();
             } catch (SQLException e) {
                 e.printStackTrace();
+
             }
         }
     }
+
+
+
 
     public ArrayList<Note> getListNote() {
         ArrayList<Note> list = new ArrayList<>();
@@ -80,6 +107,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 note.setId(cursor.getInt(cursor.getColumnIndex(KEY_ID_NOTE)));
                 note.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE_NOTE)));
                 note.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION_NOTE)));
+                Log.d(TAG, "getListNote: "+note.getId());
 
                 list.add(note);
                 cursor.moveToNext();
@@ -89,12 +117,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public long insertNote(Note note) {
+    public long addNote (Note note) {
         ContentValues values = new ContentValues();
         values.put(KEY_TITLE_NOTE, note.getTitle());
         values.put(KEY_DESCRIPTION_NOTE, note.getDescription());
         long index = db.insert(TABLE_NOTE, null, values);
         close();
         return index;
+
     }
 }

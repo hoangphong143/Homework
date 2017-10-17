@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-        storyModelList=DatabaseHandle.getInstance(this).getListStory();
-        StoryAdapter storyAdapter= new StoryAdapter(this, R.layout.item_list_story, storyModelList  );
-        lvStory.setAdapter(storyAdapter);
-    }
+    super.onStart();
+    storyModelList=DatabaseHandle.getInstance(this).getListStory();
+    StoryAdapter storyAdapter= new StoryAdapter(this, R.layout.item_list_story, storyModelList  );
+    lvStory.setAdapter(storyAdapter);
+}
 }
